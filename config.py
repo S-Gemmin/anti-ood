@@ -1,0 +1,14 @@
+import numpy as np
+
+SEED = 42
+N_TRIALS = 100
+MAX_STEPS = 200
+DT = 0.1
+TAU = 0.8
+BETA = 2.0
+STRENGTH = 0.5
+CENTER = np.array([0.0, 0.0])
+SIGMA = 1.0
+SAFE_RADIUS = 2.0
+NOISE_POS = 0.05
+NOISE_VEL = 0.02
