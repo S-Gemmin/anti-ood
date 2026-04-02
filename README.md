@@ -1,11 +1,13 @@
-### Anticipatory OOD Safety
+### FORTRESS: Anticipatory OOD Safety
 
-```
-python main.py -c → crossing rates experiment
-python main.py -t → trajectory visualization
-python main.py -r → risk heatmap
-python main.py -b → beta sweep (takes ~10s)
-python main.py -a → all
+## Experiments
+
+### Synthetic (2D Gaussian)
+```bash
+python main.py --synthetic
 ```
 
-https://www.overleaf.com/read/hytfpqjcxgfp#35bdf9
+### Real Embeddings (Text)
+```bash
+python main.py --real
+```

@@ -7,15 +7,14 @@ class Reactive:
         self.strength = strength
     
     def act(self, particle):
-        d = self.safe.distance(particle.z)
-        if d < self.tau:
-            nearest = self.safe.nearest(particle.z)
-            away = particle.z - nearest
-            norm = np.linalg.norm(away)
+        d = self.safe.distance_to_centroid(particle.z)
+        if d > self.tau:
+            to_center = self.safe.centroid - particle.z
+            norm = np.linalg.norm(to_center)
             if norm > 1e-6:
-                away = away / norm
-            return -away * self.strength
-        return np.array([0.0, 0.0])
+                to_center = to_center / norm
+            return to_center * self.strength
+        return np.array([0.0] * len(particle.z))
 
 class Anticipatory:
     def __init__(self, safe_region, tau=0.8, beta=3.0, strength=0.8):
@@ -25,23 +24,21 @@ class Anticipatory:
         self.strength = strength
     
     def act(self, particle):
-        d = self.safe.distance(particle.z)
-        nearest = self.safe.nearest(particle.z)
-        r = particle.z - nearest
-        r_norm = np.linalg.norm(r)
+        d = self.safe.distance_to_centroid(particle.z)
+        grad = self.safe.gradient(particle.z)
         
-        if r_norm < 1e-6:
-            return np.array([0.0, 0.0])
+        v_dot_grad = np.dot(particle.v, grad)
         
-        r_hat = r / r_norm
-        v_radial = np.dot(particle.v, r_hat)
+        risk = d + self.beta * max(0, -v_dot_grad)
         
-        risk = d - self.beta * min(0, v_radial)
-        
-        if risk < self.tau:
-            return -r_hat * self.strength
-        return np.array([0.0, 0.0])
+        if risk > self.tau:
+            to_center = self.safe.centroid - particle.z
+            norm = np.linalg.norm(to_center)
+            if norm > 1e-6:
+                to_center = to_center / norm
+            return to_center * self.strength
+        return np.array([0.0] * len(particle.z))
 
 class NoControl:
     def act(self, particle):
-        return np.array([0.0, 0.0])
+        return np.array([0.0] * len(particle.z))

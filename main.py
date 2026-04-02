@@ -1,41 +1,27 @@
 import argparse
-from environment import SafeRegion
-from experiments import cross_rates, trajectories, beta_sweep, risk_heatmap
-
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def main():
-    parser = argparse.ArgumentParser(description='Run experiments and generate figures.')
-    parser.add_argument('-t', '--trajectories', action='store_true',
-                       help='Generate trajectory visualization')
-    parser.add_argument('-b', '--beta-sweep', action='store_true',
-                       help='Generate beta sensitivity sweep')
-    parser.add_argument('-r', '--risk-heatmap', action='store_true',
-                       help='Generate risk landscape heatmap')
-    parser.add_argument('-c', '--cross-rates', action='store_true',
-                       help='Run crossing rates experiment')
-    parser.add_argument('-a', '--all', action='store_true',
-                       help='Run all experiments and generate all figures')
+    from experiments import cross_rates
+    from experiments.real_cross_rates import run_distance_sweep
+    
+    parser = argparse.ArgumentParser(description='FORTRESS experiments')
+    parser.add_argument('--synthetic', action='store_true', help='2D Gaussian experiment')
+    parser.add_argument('--real', action='store_true', help='Real embeddings experiment')
     
     args = parser.parse_args()
     
-    if not any([args.trajectories, args.beta_sweep, args.risk_heatmap, args.cross_rates, args.all]):
+    if not any([args.synthetic, args.real]):
         parser.print_help()
         return
     
-    safe = SafeRegion(n_points=2000)
-    
-    if args.all or args.trajectories:
-        trajectories.plot_trajectories(safe)
-    
-    if args.all or args.beta_sweep:
-        beta_sweep.plot_beta_sweep(safe)
-    
-    if args.all or args.risk_heatmap:
-        risk_heatmap.plot_risk_heatmap(safe)
-    
-    if args.all or args.cross_rates:
+    if args.synthetic:
         cross_rates.main()
-
+    
+    if args.real:
+        run_distance_sweep([0.70, 0.72, 0.74, 0.76, 0.78])
 
 if __name__ == '__main__':
     main()
