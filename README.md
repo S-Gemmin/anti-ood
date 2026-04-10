@@ -14,7 +14,7 @@ python main.py --real
 
 ### Real Embeddings (Image)
 ```bash
-python image_embedding_experiment.py --images ./safe_images/ --embeddings safe_embeddings.npy --vel 0.001 --beta 1.5
+python image_embedding_experiment.py --embeddings safe_embeddings.npy --vel 0.001 --beta 1.5
 ```
 ## Demo
 ![Trajectory Visualization](results/unity.gif)
