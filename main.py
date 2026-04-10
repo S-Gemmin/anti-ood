@@ -21,7 +21,7 @@ def main():
         cross_rates.main()
     
     if args.real:
-        run_distance_sweep([0.70, 0.72, 0.74, 0.76, 0.78])
+        run_distance_sweep([0.70, 0.72, 0.74, 0.76, 0.78], display=[0.72, 0.74, 0.76])
 
 if __name__ == '__main__':
     main()

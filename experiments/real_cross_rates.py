@@ -15,7 +15,7 @@ def run_trial(controller, safe, start_pos, start_vel):
             return True
     return False
 
-def run_distance_sweep(start_distances, n_trials=100, tau=0.65, beta=0.3):
+def run_distance_sweep(start_distances, n_trials=100, tau=0.65, beta=0.3, display=None):
     safe = RealSafeRegion()
     center = safe.centroid
     
@@ -54,7 +54,10 @@ def run_distance_sweep(start_distances, n_trials=100, tau=0.65, beta=0.3):
         a = np.mean(results['anticipatory']) * 100
         n = np.mean(results['none']) * 100
         
-        print(f"{target_dist:>10.2f} {r:>10.1f} {a:>12.1f} {n:>10.1f}")
+        # only print if in display list (or print all if display not specified)
+        if display is None or target_dist in display:
+            print(f"{target_dist:>10.2f} {r:>10.1f} {a:>12.1f} {n:>10.1f}")
+        
         results_summary.append((target_dist, r, a, n))
     
     return results_summary
